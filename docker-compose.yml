@@ -6,7 +6,7 @@ db:
   volumes:  
     - ./volumes/postgres:/var/lib/postgresql/data
 app:
-  image: delermando/hackton-nullcoffeeexception
+  image: delermando/hackton-nullcoffeeexception:1.0
   container_name: app
   ports:
     - "8080:80"
