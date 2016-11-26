@@ -3,13 +3,17 @@ db:
   container_name: db
   environment:
     - POSTGRES_PASSWORD=postgres
+  volumes:  
+    - ./volumes/postgres:/var/lib/postgresql/data
 app:
-  image: delermando/nginx-php5-fpm
+  image: nginx-php  
   container_name: app
   ports:
     - "8080:80"
   links:
     - db
   volumes:
-    - .:/app
-    - ./app/docker-compose/entrypoint.sh:/usr/local/bin/entrypoint.sh
+    - ./app:/app
+    - ./config/server/php:/etc/php5/fpm/pool.d/
+    - ./config/server/nginx/:/etc/nginx
+    - ./app/entrypoint.sh:/usr/local/bin/entrypoint.sh
