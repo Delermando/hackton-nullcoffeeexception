@@ -2,27 +2,28 @@
 require_once __DIR__.'/../vendor/autoload.php';
  
 $app = new Silex\Application();
-// production environment - false; test environment - true
+
 $app['debug'] = true;
- 
-$list = array(
- '00001'=> array(
-    'name' => 'Peter Jackson',
-    'description' => 'Producer | Director',
-    'image' => 'MV5BMTY1MzQ3NjA2OV5BMl5BanBnXkFtZTcwNTExOTA5OA@@._V1_SY317_CR8,0,214,317_AL_.jpg',
- ),
- '00002' => array(
-    'name' => 'Evangeline Lilly',
-    'description' => 'Actress',
-    'image' => 'MV5BMjEwOTA1MTcxOF5BMl5BanBnXkFtZTcwMDQyMjU5MQ@@._V1_SY317_CR24,0,214,317_AL_.jpg',
- ),
-);
+
+$list = [
+	["lat" => 22.98241688, "lon" => -43.36303711],
+	["lat" => -23.0085816, "lon" => -43.3167113],
+	["lat" => -23.0149757, "lon" => -43.3043638],
+    ["lat" => -22.98490592, "lon" => -43.36501122],
+    ["lat" => -22.98715787, "lon" => -43.36586952],
+    ["lat" => -23.0118059, "lon" => -43.3050487],
+    ["lat" => -22.98261443, "lon" => -43.36488247],
+	["lat" => -23.0080965, "lon" => -43.3043155]
+];
  
 $app->get('/', function() use ($list) {
- 
- return json_encode($list);
+	return "Hello Word!";
 });
  
+$app->get('/occurrences', function() use ($list) {
+	return json_encode($list);
+});
+
 $app->get('/{id}', function (Silex\Application $app, $id) use ($list) {
  
  if (!isset($list[$id])) {
@@ -32,4 +33,3 @@ $app->get('/{id}', function (Silex\Application $app, $id) use ($list) {
 });
  
 $app->run();
-?>
