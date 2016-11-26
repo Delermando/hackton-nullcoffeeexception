@@ -1,9 +1,24 @@
 <?php
 require_once __DIR__.'/../vendor/autoload.php';
- 
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+
 $app = new Silex\Application();
 
 $app['debug'] = true;
+
+$app->register(new Silex\Provider\DoctrineServiceProvider(), array(
+    'db.options' => array(
+        'driver'    => 'pdo_pgsql',
+        //'port' 		=> 5432,
+        'host'      => "172.17.0.2",
+        'dbname'    => 'hackaton',
+        'user'      => 'postgres',
+        'password'  => 'postgres',
+        'charset'   => 'utf-8',
+    ),
+));
+
 
 $list = [
 	["lat" => 22.98241688, "lon" => -43.36303711],
@@ -16,20 +31,34 @@ $list = [
 	["lat" => -23.0080965, "lon" => -43.3043155]
 ];
  
-$app->get('/', function() use ($list) {
+$app->get('/', function() use ($list, $app) {
+	$sql = "SELECT * FROM usuario;";
+	$post = $app['db']->fetchAssoc($sql);
+
+	var_dump($post);exit;
 	return "Hello Word!";
 });
- 
-$app->get('/occurrences', function() use ($list) {
-	return json_encode($list);
+
+$app->post('/v1/sign-up', function (Request $request) {
+    $content = json_decode($request->getContent());
+    var_dump($content);exit;
 });
 
-$app->get('/{id}', function (Silex\Application $app, $id) use ($list) {
- 
- if (!isset($list[$id])) {
-     $app->abort(404, "id {$id} does not exist.");
- }
- return json_encode($list[$id]);
+$app->post('/v1/questions', function (Request $request) {
+    $content = json_decode($request->getContent());
+    var_dump($content);exit;
+});
+
+$app->get('/v1/notify', function() use ($list) {
+	return "Hello Word!";
+});
+
+$app->get('/v1/risk-area', function() use ($list) {
+	return "Hello Word!";
+});
+
+$app->get('/v1/ccurrences', function() use ($list) {
+	return json_encode($list);
 });
  
 $app->run();
