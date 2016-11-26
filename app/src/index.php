@@ -10,7 +10,6 @@ $app['debug'] = true;
 $app->register(new Silex\Provider\DoctrineServiceProvider(), array(
     'db.options' => array(
         'driver'    => 'pdo_pgsql',
-        //'port' 		=> 5432,
         'host'      => "172.17.0.2",
         'dbname'    => 'hackaton',
         'user'      => 'postgres',
@@ -18,7 +17,6 @@ $app->register(new Silex\Provider\DoctrineServiceProvider(), array(
         'charset'   => 'utf-8',
     ),
 ));
-
 
 $list = [
 	["lat" => 22.98241688, "lon" => -43.36303711],
@@ -32,21 +30,25 @@ $list = [
 ];
  
 $app->get('/', function() use ($list, $app) {
-	$sql = "SELECT * FROM usuario;";
-	$post = $app['db']->fetchAssoc($sql);
-
-	var_dump($post);exit;
 	return "Hello Word!";
 });
 
-$app->post('/v1/sign-up', function (Request $request) {
+$app->post('/v1/sign-up', function (Request $request) use ($app) {
+    
     $content = json_decode($request->getContent());
-    var_dump($content);exit;
+	$post = $app['db']->insert('usuario',
+        array(
+            'nome' => $content->userNome,
+            'email' => $content->userEmail,
+            'senha' => $content->userSenha
+        )
+    );
+    
+	return '';
 });
 
 $app->post('/v1/questions', function (Request $request) {
     $content = json_decode($request->getContent());
-    var_dump($content);exit;
 });
 
 $app->get('/v1/notify', function() use ($list) {
