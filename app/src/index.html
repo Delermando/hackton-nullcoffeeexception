@@ -42,23 +42,23 @@
   <body>
     <div id="map"></div>
     <script>
+
+    function initMap() {
       var res = "";
       var map, heatmap;
       
-      $.ajax({url: "http://localhost:8080/occurrences", 
-        async: false, 
+      $.ajax({url: "http://198.211.98.22:9000/v1/ocorrencias", 
         success: 
         function(result){
+
           res = JSON.parse(result);
-        }
-      });
-      
-      function initMap() {
+
           list = [];
 
           for (i = 0; i < res.length; i++) {
-              list[i] = new google.maps.LatLng(res[i].lat, res[i].lon);
+              list[i] = new google.maps.LatLng(res[i].latitude, res[i].longitude);
           }
+          
 
           map = new google.maps.Map(document.getElementById('map'), {
               zoom: 11,
@@ -70,6 +70,9 @@
               data: list,
               map: map
           });
+        }
+      });
+
       }
     </script>
     <script async defer
@@ -77,4 +80,6 @@
     </script>
   </body>
 </html>
+
+
 

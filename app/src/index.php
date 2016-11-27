@@ -1,5 +1,9 @@
+
 <?php
+header("Access-Control-Allow-Origin: *");
+
 require_once __DIR__.'/../vendor/autoload.php';
+
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -59,16 +63,18 @@ $app->post('/v1/salva-ocorrencia', function (Request $request) use ($app) {
         )
     );    
 
+    $sql2 = "select id_end from enderecos order by id_end desc limit 1;";        
+    $a = $app['db']->fetchAll($sql2);
+
     $app['db']->insert('usuario_ocorrencias',
         array(
             'id_usu' => $content->id_usu,
             //'id_end' => $content->id_end,
-            'id_end' => $content->id_usu,
+            'id_end' => $a[0]['id_end'],
             'mensagem' => $content->mensagem
         )
     );
 
-    //pegar automaticamente o id do endereco
 
     return '';
 });
@@ -88,10 +94,11 @@ $app->get('/v1/area-risco', function() {
 
 $app->get('/v1/ocorrencias', function (Request $request) use ($app) { 
     $sql = "select u.id_usu, uo.id_oco, e.latitude, e.longitude from usuario_ocorrencias uo inner join enderecos e on uo.id_end = e.id_end inner join usuarios u on uo.id_usu = u.id_usu;";
-    
+        
     $post = $app['db']->fetchAll($sql);
-    
+        
     return json_encode($post);
 });
  
 $app->run();
+
