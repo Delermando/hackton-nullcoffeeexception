@@ -9,7 +9,7 @@ app:
   image: delermando/hackton-nullcoffeeexception:1.0
   container_name: app
   ports:
-    - "8080:80"
+    - "9000:80"
   links:
     - db
   volumes:

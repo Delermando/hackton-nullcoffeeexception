@@ -87,7 +87,6 @@ $app->get('/v1/area-risco', function() {
 });
 
 $app->get('/v1/ocorrencias', function (Request $request) use ($app) { 
-    var_dump('expression');exit;
     $sql = "select u.id_usu, uo.id_oco, e.latitude, e.longitude from usuario_ocorrencias uo inner join enderecos e on uo.id_end = e.id_end inner join usuarios u on uo.id_usu = u.id_usu;";
     
     $post = $app['db']->fetchAll($sql);
