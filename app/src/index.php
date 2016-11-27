@@ -1,11 +1,5 @@
 <?php
 require_once __DIR__.'/../vendor/autoload.php';
-
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: POST, GET');
-header('Access-Control-Max-Age: 1000');
-
-
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -24,55 +18,81 @@ $app->register(new Silex\Provider\DoctrineServiceProvider(), array(
     ),
 ));
 
-$list = [
-	["lat" => 22.98241688, "lon" => -43.36303711],
-	["lat" => -23.0085816, "lon" => -43.3167113],
-	["lat" => -23.0149757, "lon" => -43.3043638],
-    ["lat" => -22.98490592, "lon" => -43.36501122],
-    ["lat" => -22.98715787, "lon" => -43.36586952],
-    ["lat" => -23.0118059, "lon" => -43.3050487],
-    ["lat" => -22.98261443, "lon" => -43.36488247],
-	["lat" => -23.0080965, "lon" => -43.3043155]
-];
 
-$app->get('/', function() use ($list, $app) {
-	return "Hello Word!";
-});
+$app->post('/v1/salva-usuario', function (Request $request) use ($app) { 
 
-$app->post('/v1/sign-up', function (Request $request) use ($app) {
-    var_dump('aaaa');exit;
-//    $content = json_decode($request->getContent());
-//    var_dump(array(
-//            'nome' => $content->nome,
-//            'email' => $content->email,
-//            'senha' => $content->senha
-//        ));exit;
-//
-//	$post = $app['db']->insert('usuario',
-//        array(
-//            'nome' => $content->nome,
-//            'email' => $content->email,
-//            'senha' => $content->senha
-//        )
-//    );
+	$content = json_decode($request->getContent());
+    $post = $app['db']->insert('usuarios',
+        array(
+            'nome' => $content->nome,
+            'email' => $content->email,
+            'senha' => $content->senha
+        )
+    );
 
 	return '';
 });
 
-$app->post('/v1/questions', function (Request $request) {
+$app->post('/v1/salva-questoes', function (Request $request) use ($app) {
     $content = json_decode($request->getContent());
+
+    $que_list = [];
+
+    foreach ($content->ids_que as $id_que){
+        $post = $app['db']->insert('usuario_questoes', [
+            'id_usu' => $content->id_usu,
+            'id_que' => $id_que
+        ]);
+    }
+
+    return '';
 });
 
-$app->get('/v1/notify', function() use ($list) {
-	return "Hello Word!";
+
+$app->post('/v1/salva-ocorrencia', function (Request $request) use ($app) { 
+    $content = json_decode($request->getContent());
+
+    $app['db']->insert('enderecos',
+        array(
+            'latitude' => $content->latitude,
+            'longitude' => $content->longitude
+        )
+    );    
+
+    $app['db']->insert('usuario_ocorrencias',
+        array(
+            'id_usu' => $content->id_usu,
+            //'id_end' => $content->id_end,
+            'id_end' => $content->id_usu,
+            'mensagem' => $content->mensagem
+        )
+    );
+
+    //pegar automaticamente o id do endereco
+
+    return '';
 });
 
-$app->get('/v1/risk-area', function() use ($list) {
-	return "Hello Word!";
+
+$app->get('/', function() use ($list, $app) {
+    return "Hello Word!";
 });
 
-$app->get('/v1/ccurrences', function() use ($list) {
-	return json_encode($list);
+$app->get('/v1/notificacao', function() {
+	return "notificacao!";
 });
 
+$app->get('/v1/area-risco', function() {
+	return "area de risco";
+});
+
+$app->get('/v1/ocorrencias', function (Request $request) use ($app) { 
+    var_dump('expression');exit;
+    $sql = "select u.id_usu, uo.id_oco, e.latitude, e.longitude from usuario_ocorrencias uo inner join enderecos e on uo.id_end = e.id_end inner join usuarios u on uo.id_usu = u.id_usu;";
+    
+    $post = $app['db']->fetchAll($sql);
+    
+    return json_encode($post);
+});
+ 
 $app->run();
