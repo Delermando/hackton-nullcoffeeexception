@@ -3,6 +3,8 @@ db:
   container_name: db
   environment:
     - POSTGRES_PASSWORD=postgres
+  ports:
+    - "5432:5432"
   volumes:  
     - ./volumes/postgres:/var/lib/postgresql/data
 app:
