@@ -68,29 +68,37 @@
     </form>
     <script>
     function teste(){
+      
       var nome = document.getElementById('userNome');
       var email = document.getElementById('userEmail');
       var senha = document.getElementById('userSenha');
-      var radios = document.getElementByName('radios');
-      for (var i = 0, length = radios.length; i < length; i++) {
-          if (radios[i].checked) {
-            uSexo = radios[i].value;
-            break;}
-     };
+//      var radios = document.getElementByName('radios');
+//
+//      for (var i = 0, length = radios.length; i < length; i++) {
+//          if (radios[i].checked) {
+//            uSexo = radios[i].value;
+//            break;
+//          }
+//     };
+     //Ext.lib.Ajax.useDefaultHeader = false;
      var usuario = [{"nome": nome.value, "email": email.value, "senha": senha.value}];
-     $.ajax({
+     //alert(usuario);
 
+    //$.post( "http://localhost:8080/v1/sing-up", JSON.stringify(usuario))
+    //  .done(function( data ) {
+    //  alert( "Data Loaded: " + data );
+    //});
+     $.ajax({
+         url: "http://127.0.0.1:8080/v1/sign-up",
          type: "POST",
-         url: "http://localhost:8080/v1/singup",
-         // The key needs to match your method's input parameter (case-sensitive).
-         data: JSON.stringify(usuario),
+         data: JSON.stringify("{'nome': 'aaa'}"),
          contentType: "application/json; charset=utf-8",
          dataType: "json",
          success: function(data){alert(data);},
          failure: function(errMsg) {
-             alert(errMsg);
+            alert(errMsg);
          }
-     })
+     });
    }
     </script>
   </body>

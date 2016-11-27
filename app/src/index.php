@@ -1,5 +1,11 @@
 <?php
 require_once __DIR__.'/../vendor/autoload.php';
+
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: POST, GET');
+header('Access-Control-Max-Age: 1000');
+
+
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -33,19 +39,25 @@ $app->get('/', function() use ($list, $app) {
 	return "Hello Word!";
 });
 
-$app->post('/v1/sign-up', function (Request $request) use ($app) {
-    
+$app->match('/v1/sign-up', function (Request $request) use ($app) {
+    var_dump('aaaa');exit;
     $content = json_decode($request->getContent());
+    var_dump(array(
+            'nome' => $content->nome,
+            'email' => $content->email,
+            'senha' => $content->senha
+        ));exit;
+
 	$post = $app['db']->insert('usuario',
         array(
-            'nome' => $content->userNome,
-            'email' => $content->userEmail,
-            'senha' => $content->userSenha
+            'nome' => $content->nome,
+            'email' => $content->email,
+            'senha' => $content->senha
         )
     );
-    
+
 	return '';
-});
+})->method('OPTIONS|POST');
 
 $app->post('/v1/questions', function (Request $request) {
     $content = json_decode($request->getContent());
