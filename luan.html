@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Relatório</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  </head>
+  <body>
+    <form class="form-horizontal">
+      <fieldset>
+        <!-- Text input1-->
+        <div class="form-group">
+          <label class="col-md-4 control-label" for="param1"></label>
+          <div class="col-md-4">
+            <input id="param1" name="param1" type="text" placeholder="" class="form-control input-md">
+
+          </div>
+        </div>
+        <!-- Text input2-->
+        <div class="form-group">
+          <label class="col-md-4 control-label" for="param1"></label>
+          <div class="col-md-4">
+            <input id="param2" name="param2" type="text" placeholder="" class="form-control input-md">
+          </div>
+        </div>
+        <!-- Button (Double) -->
+        <div class="form-group">
+          <label class="col-md-4 control-label" for="button1id"></label>
+          <div class="col-md-8">
+            <button id="button1id" onclick="enviar();"name="button1id" class="btn btn-success">Salvar</button>
+          </div>
+        </div>
+
+      </fieldset>
+    </form>
+
+    <script>
+      function enviar(){
+           var campo1 = document.getElementById('param1');
+           var campo2 = document.getElementById('param2');
+
+          var dados = [{"campo1": campo1.value, "campo2": campo2.value}];
+          alert(JSON.stringify(dados));
+          $.ajax({
+            type: "get",
+            data: JSON.stringify(dados),
+            url: "http://127.0.0.1:8080/link/save",
+            contentType: "application/json"
+          }).done(function(res) {
+            console.log('res', res);
+
+});
+//          $.ajax({
+//              url: "http://127.0.0.1:8080/v1/sign-up",
+//              type: "POST",
+//              data: JSON.stringify("{'nome': 'aaa'}"),
+//              contentType: "application/json; charset=utf-8",
+//              dataType: "json",
+//              success: function(data){alert(data);},
+//              failure: function(errMsg) {
+//                 alert(errMsg);
+//              }
+//          });
+//          alert('a');
+      }
+    </script>
+  </body>
+</html>
