@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="utf-8">
+    <title>title</title>
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <script src="js/cadastro.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+  </head>
+  <body>
+    <form class="form-horizontal" id="frmcadastro" method="post">
+      <fieldset>
+          <!-- Form Name -->
+          <legend>Cadastro</legend>
+
+          <!-- Text input-->
+          <div class="form-group">
+            <label class="col-md-4 control-label" for="textinput"></label>
+            <div class="col-md-4">
+            <input id="userNome" name="textinput" type="text" placeholder="usuario" class="form-control input-md">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="col-md-4 control-label" for="textinput"></label>
+            <div class="col-md-4">
+            <input id="userEmail" name="textinput" type="text" placeholder="email" class="form-control input-md">
+            </div>
+          </div>
+
+          <!-- Password input-->
+          <div class="form-group">
+            <label class="col-md-4 control-label" for="passwordinput"></label>
+            <div class="col-md-4">
+              <input id="userSenha" name="passwordinput" type="password" placeholder="Senha" class="form-control input-md">
+            </div>
+          </div>
+
+          <!-- Multiple Radios -->
+          <div class="form-group">
+            <label class="col-md-4 control-label" for="radios"></label>
+            <div class="col-md-4">
+            <div class="radio">
+              <label for="radios-0">
+                <input type="radio" name="radios" id="radios-0" value="1" checked="checked">
+                Macho
+              </label>
+          	</div>
+            <div class="radio">
+              <label for="radios-1">
+                <input type="radio" name="radios" id="radios-1" value="2">
+                Fâmea
+              </label>
+          	</div>
+            </div>
+          </div>
+
+          <!-- Button (Double) -->
+          <div class="form-group">
+            <label class="col-md-4 control-label" for="button1id"></label>
+            <div class="col-md-8">
+              <button id="button1id" onclick="teste();" name="button1id" class="btn btn-success">Salvar</button>
+              <button id="button2id" type="submit" name="button2id" class="btn btn-danger">Voltar</button>
+            </div>
+          </div>
+      </fieldset>
+    </form>
+    <script>
+    function teste(){
+      var nome = document.getElementById('userNome');
+      var email = document.getElementById('userEmail');
+      var senha = document.getElementById('userSenha');
+      var radios = document.getElementByName('radios');
+      for (var i = 0, length = radios.length; i < length; i++) {
+          if (radios[i].checked) {
+            uSexo = radios[i].value;
+            break;}
+     };
+     var usuario = [{"nome": nome.value, "email": email.value, "senha": senha.value}];
+     $.ajax({
+
+         type: "POST",
+         url: "http://localhost:8080/v1/singup",
+         // The key needs to match your method's input parameter (case-sensitive).
+         data: JSON.stringify(usuario),
+         contentType: "application/json; charset=utf-8",
+         dataType: "json",
+         success: function(data){alert(data);},
+         failure: function(errMsg) {
+             alert(errMsg);
+         }
+     })
+   }
+    </script>
+  </body>
+</html>
